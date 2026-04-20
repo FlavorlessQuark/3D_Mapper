@@ -7,4 +7,4 @@
 - [ ]  Test  ultrasound module works | [ ] Static | [ ] Move in a straight line with objects at different depths
 - [ ]  Test the  motor controller (rotate smoothly at given angle)
 - [ ]  Test servo rotate smoothly
-- [ ]  Spin  test
+- [ ]  Spin  test +
