@@ -1,8 +1,23 @@
 #include "../incl/structs.h"
 
-Vec3 VectSub(Vec3 a, Vec3 b)
+double	ToRad(double angle)
 {
-	Vec3 vec;
+    double result;
+    
+	result = angle * M_PI;
+	result /= 180;
+    
+	return result;
+}
+
+double VectMag(Vect3 vec) {
+	return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+}
+
+
+Vect3 VectSub(Vect3 a, Vect3 b)
+{
+	Vect3 vec;
 
 	vec.x = a.x - b.x; 
 	vec.y = a.y - b.y; 
@@ -11,9 +26,9 @@ Vec3 VectSub(Vec3 a, Vec3 b)
 	return vec;
 }
 
-Vec3 VectAdd(Vec3 a, Vec3 b)
+Vect3 VectAdd(Vect3 a, Vect3 b)
 {
-	Vec3 vec;
+	Vect3 vec;
 
 	vec.x = a.x + b.x;
 	vec.y = a.y + b.y;
@@ -22,9 +37,9 @@ Vec3 VectAdd(Vec3 a, Vec3 b)
 	return vec;
 }
 
-Vec3 VectScale(Vec3 a, double scalar)
+Vect3 VectScale(Vect3 a, double scalar)
 {
-	Vec3 vec;
+	Vect3 vec;
 
 	vec.x = a.x * scalar;
 	vec.y = a.y * scalar;
@@ -33,32 +48,32 @@ Vec3 VectScale(Vec3 a, double scalar)
 	return vec;
 }
 
-double VectAbs(Vec3 a)
+double VectAbs(Vect3 a)
 {
 	return sqrt((a.x * a.x) + (a.y * a.y) + (a.z * a.z));
 }
 
-double VectDot(Vec3 a, Vec3 b, double *angle)
+double VectDot(Vect3 a, Vect3 b, double *angle)
 {
 	if (angle != NULL)
 		return VectMag(a) * VectMag(a) * cos(*angle);
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
-Vec3 VectFromAngle_Deg(double x_angle, double y_angle, double magnitude)
+Vect3 VectFromAngle_Deg(double x_angle, double y_angle, double magnitude)
 {
-	Vec3 result;
+	Vect3 result;
 
-	result.x = cos(MT_ToRadf(y_angle)) * sin(MT_ToRadf(x_angle)) * magnitude;
-	result.y = sin(MT_ToRadf(y_angle)) * magnitude;
-	result.z = cos(MT_ToRadf(y_angle)) * cos(MT_ToRadf(x_angle)) * magnitude;
+	result.x = cos(ToRad(y_angle)) * sin(ToRad(x_angle)) * magnitude;
+	result.y = sin(ToRad(y_angle)) * magnitude;
+	result.z = cos(ToRad(y_angle)) * cos(ToRad(x_angle)) * magnitude;
 
 	return result;
 }
 
-Vec3 VectNormalize(Vec3 vec)
+Vect3 VectNormalize(Vect3 vec)
 {
-	Vec3 result;
+	Vect3 result;
 	double mag;
 
 	mag = VectMag(vec);
@@ -68,11 +83,6 @@ Vec3 VectNormalize(Vec3 vec)
 	result.z = vec.z / mag;
 
 	return result;
-}
-
-double VectMag(Vec3 vec)
-{
-	return sqrt((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z));
 }
 
 Vect3 MatVec_Mult(Vect3 vec, Matrix mat) {
