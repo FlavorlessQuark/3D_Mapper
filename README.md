@@ -1,6 +1,17 @@
 # 3D_Mapper
 
-- Use Stepper to rotate on the Z axis and servo to rotate on the Y axis.
-- 1x 360 rotation of stepper = 1x8degree rotation of servo
-- Ultrasonic module takes distance readings and outputs point data to Serial
-- Mapping visualization runs points in 3D space (go to visualizer branch)
+Usage :
+
+- Connect robot to 9V power source
+
+- Connect arduino to power
+
+- Robot will execute ~12 360 turns
+
+- Save data from serial and use script to convert it to a C array
+
+- Compile visualizer with `g++ srcs/*.cpp -l SDL2 -lm -I incl/` *
+
+- run ./a.out
+
+*Note : If you have SDL3, compile with -lSDL3 instead. Tested only on Linux. Seems to require sdl2_compat package
