@@ -1,61 +1,6 @@
 #include <SDL2/SDL.h>
 #include "../incl/visualizer.h"
 
-// // Global Camera Variables
-// Vect3 eye    = {0.0f, 0.0f, 5.0f};  // Starting position
-// Vect3 target = {0.0f, 0.0f, 0.0f};  // Looking at the origin
-// Vect3 up     = {0.0f, 1.0f, 0.0f};  // Up direction
-
-// float moveSpeed = 0.1f;
-
-// void InputLoop(void)
-// {
-//     SDL_Event event;
-//     while (SDL_PollEvent(&event))
-//     {
-//         if (event.type == SDL_QUIT) exit(0);
-//     }
-
-//     // Get current keyboard state for smooth movement
-//     const Uint8 *state = SDL_GetKeyboardState(NULL);
-
-//     if (state[SDL_SCANCODE_ESCAPE]) exit(0);
-
-//     // Forward / Backward (Z-axis)
-//     if (state[SDL_SCANCODE_W]) {
-//         eye.z -= moveSpeed;
-//         target.z -= moveSpeed;
-//     }
-//     if (state[SDL_SCANCODE_S]) {
-//         eye.z += moveSpeed;
-//         target.z += moveSpeed;
-//     }
-
-//     // Left / Right (X-axis)
-//     if (state[SDL_SCANCODE_A]) {
-//         eye.x -= moveSpeed;
-//         target.x -= moveSpeed;
-//     }
-//     if (state[SDL_SCANCODE_D]) {
-//         eye.x += moveSpeed;
-//         target.x += moveSpeed;
-//     }
-
-//     // Up / Down (Y-axis)
-//     if (state[SDL_SCANCODE_SPACE]) {
-//         eye.y += moveSpeed;
-//         target.y += moveSpeed;
-//     }
-//     if (state[SDL_SCANCODE_LSHIFT]) {
-//         eye.y -= moveSpeed;
-//         target.y -= moveSpeed;
-//     }
-
-//     // Apply the changes to your matrix
-//     Update_Camera(eye, target, up);
-// }
-
-
 // Orbit State
 Vect3 target = {0.0f, 0.0f, 0.0f};  // The point we orbit
 float distance = 5.0f;             // Radius
@@ -63,7 +8,7 @@ float azimuth = 1.57f;             // Horizontal angle (radians)
 float polar = 1.57f;               // Vertical angle (radians)
 
 float moveSpeed = 0.6f;           // Speed of target movement
-float orbitSpeed = 0.006f;          // Speed of rotation
+float orbitSpeed = 0.06f;          // Speed of rotation
 float zoomSpeed = 0.1f;            // Speed of distance change
 
 void InputLoop(float dt)
