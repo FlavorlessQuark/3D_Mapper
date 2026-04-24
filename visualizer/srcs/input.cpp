@@ -62,9 +62,9 @@ float distance = 5.0f;             // Radius
 float azimuth = 1.57f;             // Horizontal angle (radians)
 float polar = 1.57f;               // Vertical angle (radians)
 
-float moveSpeed = 0.006f;           // Speed of target movement
+float moveSpeed = 0.6f;           // Speed of target movement
 float orbitSpeed = 0.006f;          // Speed of rotation
-float zoomSpeed = 0.01f;            // Speed of distance change
+float zoomSpeed = 0.1f;            // Speed of distance change
 
 void InputLoop(float dt)
 {
@@ -115,8 +115,8 @@ void InputLoop(float dt)
     }
 
     // --- ZOOM ---
-    if (state[SDL_SCANCODE_SPACE]) distance *= (1.0f - zoomSpeed * dt);
-    if (state[SDL_SCANCODE_TAB])   distance *= (1.0f + zoomSpeed * dt);
+    if (state[SDL_SCANCODE_Z]) distance *= (1.0f - zoomSpeed * dt);
+    if (state[SDL_SCANCODE_X])   distance *= (1.0f + zoomSpeed * dt);
 
     if (distance < 1.0f) distance = 1.0f;
 

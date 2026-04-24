@@ -32,15 +32,16 @@ int main(void) {
     Vect2 *p2D = new Vect2[8];
 
     pc3D[0] = (Vect3){.x= 1, .y = 1, .z = 1};
-    pc3D[1] = (Vect3){.x= 1, .y = 0, .z = 1};
-    pc3D[2] = (Vect3){.x= 1, .y = 1, .z = 0};
-    pc3D[3] = (Vect3){.x= 1, .y = 0, .z = 0};
-    pc3D[4] = (Vect3){.x=  0, .y = 1, .z = 1};
-    pc3D[5] = (Vect3){.x=  0, .y = 0, .z = 1};
-    pc3D[6] = (Vect3){.x=  0, .y = 1, .z = 0};
-    pc3D[7] = (Vect3){.x=  0, .y = 0, .z = 0};
+    pc3D[1] = (Vect3){.x= 1, .y = -1, .z = 1};
+    pc3D[2] = (Vect3){.x= 1, .y = 1, .z = -1};
+    pc3D[3] = (Vect3){.x= 1, .y = -1, .z = -1};
+    pc3D[4] = (Vect3){.x=  -1, .y = 1, .z = 1};
+    pc3D[5] = (Vect3){.x=  -1, .y = -1, .z = 1};
+    pc3D[6] = (Vect3){.x=  -1, .y = 1, .z = -1};
+    pc3D[7] = (Vect3){.x=  -1, .y = -1, .z = -1};
 
     SDLX_InitDefault();
+    Init_Matrix();
 
     display = SDLX_DisplayGet();
     SDL_SetRenderDrawColor(display->renderer, 0,100,0,255);
@@ -62,8 +63,8 @@ int main(void) {
             //     (p2D[i].x + 1.0) * display->win_w,
             //     (p2D[i].y + 1.0) * display->win_h
             // );
-            float screenX = (p2D[i].x + 1.0f) * display->win_w;
-            float screenY = (p2D[i].y + 1.0f) * display->win_h;
+            float screenX = ((p2D[i].x + 1.0f) * display->win_w / 2);
+            float screenY = ((p2D[i].y + 1.0f) * display->win_h / 2);
 
             // Draw a 10x10 rectangle centered at (screenX, screenY)
             DrawCenteredRect(display->renderer, screenX, screenY, 10.0f);

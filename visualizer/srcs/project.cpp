@@ -1,20 +1,172 @@
+// #include "../incl/structs.h"
+// #include "../incl/macros.h"
+// #include "../incl/visualizer.h"
+// #include <cmath> 
+
+// Matrix view;
+// Matrix projection;
+
+
+// Vect3 Normalize(Vect3 v) {
+//     double len = sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+//     return (Vect3){v.x/len, v.y/len, v.z/len};
+// }
+
+// Vect3 Cross(Vect3 a, Vect3 b) {
+//     return (Vect3){a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x};
+// }
+
+// double Dot(Vect3 a, Vect3 b) {
+//     return a.x*b.x + a.y*b.y + a.z*b.z;
+// }
+
+// void Update_Camera(Vect3 eye, Vect3 target, Vect3 up)
+// {
+//     // Forward (camera direction)
+//     Vect3 f = Normalize((Vect3){
+//         target.x - eye.x,
+//         target.y - eye.y,
+//         target.z - eye.z
+//     });
+
+//     // Right (correct order!)
+//     Vect3 r = Normalize(Cross(f, up));
+
+//     // True up
+//     Vect3 u = Cross(r, f);
+
+//     bzero(view.mat, view.m * view.n * sizeof(double));
+
+//     // Row-major view matrix
+//     view.mat[0][0] = r.x;
+//     view.mat[0][1] = r.y;
+//     view.mat[0][2] = r.z;
+//     view.mat[0][3] = -Dot(r, eye);
+
+//     view.mat[1][0] = u.x;
+//     view.mat[1][1] = u.y;
+//     view.mat[1][2] = u.z;
+//     view.mat[1][3] = -Dot(u, eye);
+
+//     view.mat[2][0] = -f.x;
+//     view.mat[2][1] = -f.y;
+//     view.mat[2][2] = -f.z;
+//     view.mat[2][3] = Dot(f, eye);
+
+//     view.mat[3][0] = 0.0;
+//     view.mat[3][1] = 0.0;
+//     view.mat[3][2] = 0.0;
+//     view.mat[3][3] = 1.0;
+// }
+
+
+// void Init_Matrix()
+// {
+//     double f = 1.0 / tan(ToRad(FOV / 2.0));
+
+//     bzero(projection.mat, projection.m * projection.n * sizeof(double));
+
+//     projection.mat[0][0] = f / A_RATIO;
+//     projection.mat[1][1] = f;
+
+//     projection.mat[2][2] = FAR / (FAR - NEAR);
+//     projection.mat[3][2] = 1.0;
+
+//     projection.mat[2][3] = (-NEAR * FAR) / (FAR - NEAR);
+// }
+
+// // void Init_Matrix(){
+// //     double field = 1.0f / SDL_tanf(ToRad(FOV / 2));
+
+// //     bzero(projection.mat, projection.m * projection.n * sizeof(double));
+// //     projection.mat[0][0] = A_RATIO * field;
+// //     projection.mat[1][1] = field;
+// //     projection.mat[2][2] =  FAR / (FAR - NEAR);
+// //     projection.mat[2][3] =  1;
+// //     projection.mat[3][2] = (-FAR * NEAR)/ (FAR - NEAR);
+// // }
+
+// Vect3 Mat_Mult(Vect3 vec, Matrix mat) {
+//     Vect3 out;
+
+//     out.x = vec.x * mat.mat[0][0] + vec.y * mat.mat[1][0] + vec.z * mat.mat[2][0] + mat.mat[3][0];
+//     out.y = vec.x * mat.mat[0][1] + vec.y * mat.mat[1][1] + vec.z * mat.mat[2][1] + mat.mat[3][1];
+//     out.z = vec.x * mat.mat[0][2] + vec.y * mat.mat[1][2] + vec.z * mat.mat[2][2] + mat.mat[3][2];
+    
+//     double w = vec.x * mat.mat[0][3] + vec.y * mat.mat[1][3] + vec.z * mat.mat[2][3] + mat.mat[3][3];
+
+//     if (w != 0.0f) {
+//         out.x /= w;
+//         out.y /= w;
+//         out.z /= w;
+//     }
+
+//     return out;
+// }
+
+// Vect3 Polar_to_Cartesian(Vect3_Polar p) {
+//    Vect3 cartesian;
+
+//    cartesian.x = p.r * SDL_sinf(p.angle_y) * SDL_cosf(p.angle_z);
+//    cartesian.y = p.r * SDL_sinf(p.angle_y) * SDL_sinf(p.angle_z);
+//    cartesian.z = p.r * SDL_cosf(p.angle_y);
+
+//     return cartesian;
+// }
+
+// // void project(Vect3_Polar *in, Vect2 *out, int count) {
+// //     for (int i = 0; i < count; i++) {
+// //         Vect3 proj_result = Mat_Mult(Polar_to_Cartesian(in[i]), projection);
+// //         out[i] = {.x = proj_result.x, .y = proj_result.y};
+// //     }
+// // }
+
+// Matrix Mat4_Mul(Matrix a, Matrix b) {
+//     Matrix result;
+
+//     for (int i = 0; i < 4; i++) {
+//         for (int j = 0; j < 4; j++) {
+//             result.mat[i][j] = 
+//                 a.mat[i][0] * b.mat[0][j] +
+//                 a.mat[i][1] * b.mat[1][j] +
+//                 a.mat[i][2] * b.mat[2][j] +
+//                 a.mat[i][3] * b.mat[3][j];
+//         }
+//     }
+
+//     return result;
+// }
+
+// void project(Vect3 *in, Vect2 *out, int count) {
+//     Matrix vp = Mat4_Mul(view, projection);
+//     for (int i = 0; i < count; i++) {
+//         Vect3 proj_result = Mat_Mult(in[i], vp);
+//         out[i] = {.x = proj_result.x, .y = proj_result.y};
+//     }
+// }
+
 #include "../incl/structs.h"
 #include "../incl/macros.h"
 #include "../incl/visualizer.h"
-#include <cmath> 
+#include <cmath>
+#include <strings.h> // for bzero
 
-
-Matrix  projection;
-
-
+Matrix view;
+Matrix projection;
 
 Vect3 Normalize(Vect3 v) {
     double len = sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+    if (len == 0.0)
+        return (Vect3){0, 0, 0};
     return (Vect3){v.x/len, v.y/len, v.z/len};
 }
 
 Vect3 Cross(Vect3 a, Vect3 b) {
-    return (Vect3){a.y*b.z - a.z*b.y, a.z*b.x - a.x*b.z, a.x*b.y - a.y*b.x};
+    return (Vect3){
+        a.y*b.z - a.z*b.y,
+        a.z*b.x - a.x*b.z,
+        a.x*b.y - a.y*b.x
+    };
 }
 
 double Dot(Vect3 a, Vect3 b) {
@@ -23,82 +175,65 @@ double Dot(Vect3 a, Vect3 b) {
 
 void Update_Camera(Vect3 eye, Vect3 target, Vect3 up)
 {
-    // Forward (camera direction)
     Vect3 f = Normalize((Vect3){
         target.x - eye.x,
         target.y - eye.y,
         target.z - eye.z
     });
 
-    // Right (correct order!)
     Vect3 r = Normalize(Cross(f, up));
-
-    // True up
     Vect3 u = Cross(r, f);
 
-    bzero(projection.mat, projection.m * projection.n * sizeof(double));
+    bzero(view.mat, view.m * view.n * sizeof(double));
 
     // Row-major view matrix
-    projection.mat[0][0] = r.x;
-    projection.mat[0][1] = r.y;
-    projection.mat[0][2] = r.z;
-    projection.mat[0][3] = -Dot(r, eye);
+    view.mat[0][0] = r.x;
+    view.mat[0][1] = r.y;
+    view.mat[0][2] = r.z;
+    view.mat[0][3] = -Dot(r, eye);
 
-    projection.mat[1][0] = u.x;
-    projection.mat[1][1] = u.y;
-    projection.mat[1][2] = u.z;
-    projection.mat[1][3] = -Dot(u, eye);
+    view.mat[1][0] = u.x;
+    view.mat[1][1] = u.y;
+    view.mat[1][2] = u.z;
+    view.mat[1][3] = -Dot(u, eye);
 
-    projection.mat[2][0] = -f.x;
-    projection.mat[2][1] = -f.y;
-    projection.mat[2][2] = -f.z;
-    projection.mat[2][3] = Dot(f, eye);
+    view.mat[2][0] = -f.x;
+    view.mat[2][1] = -f.y;
+    view.mat[2][2] = -f.z;
+    view.mat[2][3] = -Dot(f, eye); // FIXED SIGN
 
-    projection.mat[3][0] = 0.0;
-    projection.mat[3][1] = 0.0;
-    projection.mat[3][2] = 0.0;
-    projection.mat[3][3] = 1.0;
+    view.mat[3][0] = 0.0;
+    view.mat[3][1] = 0.0;
+    view.mat[3][2] = 0.0;
+    view.mat[3][3] = 1.0;
 }
 
+void Init_Matrix()
+{
+    double f = 1.0 / tan(ToRad(FOV / 2.0));
 
-void Init_Matrix(){
-    // Ensure FOV is handled correctly (Field of projection factor)
-    double field = 1.0 / tan(ToRad(FOV / 2.0));
-    double range = FAR - NEAR;
-
-    // Zero out the matrix first
     bzero(projection.mat, projection.m * projection.n * sizeof(double));
 
-    // Standard Perspective Projection
-    projection.mat[0][0] = field / A_RATIO; // Divide by Aspect Ratio
-    projection.mat[1][1] = field;
-    projection.mat[2][2] = FAR / range;
-    projection.mat[3][2] = (-FAR * NEAR) / range;
-    projection.mat[2][3] = 1.0; 
-    projection.mat[3][3] = 0.0; // Ensure this is 0
+    projection.mat[0][0] = f / A_RATIO;
+    projection.mat[1][1] = f;
+
+    projection.mat[2][2] = FAR / (FAR - NEAR);
+    projection.mat[2][3] = 1.0; // FIXED POSITION
+
+    projection.mat[3][2] = (-FAR * NEAR) / (FAR - NEAR); // FIXED POSITION
 }
-
-// void Init_Matrix(){
-//     double field = 1.0f / SDL_tanf(ToRad(FOV / 2));
-
-//     bzero(projection.mat, projection.m * projection.n * sizeof(double));
-//     projection.mat[0][0] = A_RATIO * field;
-//     projection.mat[1][1] = field;
-//     projection.mat[2][2] =  FAR / (FAR - NEAR);
-//     projection.mat[2][3] =  1;
-//     projection.mat[3][2] = (-FAR * NEAR)/ (FAR - NEAR);
-// }
 
 Vect3 Mat_Mult(Vect3 vec, Matrix mat) {
     Vect3 out;
 
-    out.x = vec.x * mat.mat[0][0] + vec.y * mat.mat[1][0] + vec.z * mat.mat[2][0] + mat.mat[3][0];
-    out.y = vec.x * mat.mat[0][1] + vec.y * mat.mat[1][1] + vec.z * mat.mat[2][1] + mat.mat[3][1];
-    out.z = vec.x * mat.mat[0][2] + vec.y * mat.mat[1][2] + vec.z * mat.mat[2][2] + mat.mat[3][2];
-    
-    double w = vec.x * mat.mat[0][3] + vec.y * mat.mat[1][3] + vec.z * mat.mat[2][3] + mat.mat[3][3];
+    // Row-major * column vector
+    out.x = vec.x * mat.mat[0][0] + vec.y * mat.mat[0][1] + vec.z * mat.mat[0][2] + mat.mat[0][3];
+    out.y = vec.x * mat.mat[1][0] + vec.y * mat.mat[1][1] + vec.z * mat.mat[1][2] + mat.mat[1][3];
+    out.z = vec.x * mat.mat[2][0] + vec.y * mat.mat[2][1] + vec.z * mat.mat[2][2] + mat.mat[2][3];
 
-    if (w != 0.0f) {
+    double w = vec.x * mat.mat[3][0] + vec.y * mat.mat[3][1] + vec.z * mat.mat[3][2] + mat.mat[3][3];
+
+    if (w != 0.0) {
         out.x /= w;
         out.y /= w;
         out.z /= w;
@@ -108,25 +243,37 @@ Vect3 Mat_Mult(Vect3 vec, Matrix mat) {
 }
 
 Vect3 Polar_to_Cartesian(Vect3_Polar p) {
-   Vect3 cartesian;
+    Vect3 cartesian;
 
-   cartesian.x = p.r * SDL_sinf(p.angle_y) * SDL_cosf(p.angle_z);
-   cartesian.y = p.r * SDL_sinf(p.angle_y) * SDL_sinf(p.angle_z);
-   cartesian.z = p.r * SDL_cosf(p.angle_y);
+    cartesian.x = p.r * SDL_sinf(p.angle_y) * SDL_cosf(p.angle_z);
+    cartesian.y = p.r * SDL_sinf(p.angle_y) * SDL_sinf(p.angle_z);
+    cartesian.z = p.r * SDL_cosf(p.angle_y);
 
     return cartesian;
 }
 
-// void project(Vect3_Polar *in, Vect2 *out, int count) {
-//     for (int i = 0; i < count; i++) {
-//         Vect3 proj_result = Mat_Mult(Polar_to_Cartesian(in[i]), projection);
-//         out[i] = {.x = proj_result.x, .y = proj_result.y};
-//     }
-// }
+Matrix Mat4_Mul(Matrix a, Matrix b) {
+    Matrix result;
+
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            result.mat[i][j] =
+                a.mat[i][0] * b.mat[0][j] +
+                a.mat[i][1] * b.mat[1][j] +
+                a.mat[i][2] * b.mat[2][j] +
+                a.mat[i][3] * b.mat[3][j];
+        }
+    }
+
+    return result;
+}
 
 void project(Vect3 *in, Vect2 *out, int count) {
+    // Correct order: projection * view
+    Matrix vp = Mat4_Mul(projection, view);
+
     for (int i = 0; i < count; i++) {
-        Vect3 proj_result = Mat_Mult(in[i], projection);
-        out[i] = {.x = proj_result.x, .y = proj_result.y};
+        Vect3 proj_result = Mat_Mult(in[i], vp);
+        out[i] = (Vect2){proj_result.x, proj_result.y};
     }
 }
