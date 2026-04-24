@@ -48,7 +48,7 @@ int main(void) {
     while (1) {
         SDL_RenderClear(display->renderer);
         // handles camera controlls
-		InputLoop();
+		InputLoop(0.08);
 
         // color of points
         SDL_SetRenderDrawColor(display->renderer, 200,100,0,255);

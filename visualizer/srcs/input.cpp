@@ -62,11 +62,11 @@ float distance = 5.0f;             // Radius
 float azimuth = 1.57f;             // Horizontal angle (radians)
 float polar = 1.57f;               // Vertical angle (radians)
 
-float moveSpeed = 0.05f;           // Speed of target movement
-float orbitSpeed = 0.01f;          // Speed of rotation
-float zoomSpeed = 0.1f;            // Speed of distance change
+float moveSpeed = 0.006f;           // Speed of target movement
+float orbitSpeed = 0.006f;          // Speed of rotation
+float zoomSpeed = 0.01f;            // Speed of distance change
 
-void InputLoop(void)
+void InputLoop(float dt)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -75,30 +75,52 @@ void InputLoop(void)
     }
 
     const Uint8 *state = SDL_GetKeyboardState(NULL);
+
     if (state[SDL_SCANCODE_ESCAPE]) exit(0);
 
-    // --- ARROW KEYS: Move the Orbit Target ---
-    if (state[SDL_SCANCODE_UP])    target.z -= moveSpeed;
-    if (state[SDL_SCANCODE_DOWN])  target.z += moveSpeed;
-    if (state[SDL_SCANCODE_LEFT])  target.x -= moveSpeed;
-    if (state[SDL_SCANCODE_RIGHT]) target.x += moveSpeed;
+    // --- CAMERA ROTATION ---
+    if (state[SDL_SCANCODE_A]) azimuth -= orbitSpeed * dt;
+    if (state[SDL_SCANCODE_D]) azimuth += orbitSpeed * dt;
+    if (state[SDL_SCANCODE_W]) polar   -= orbitSpeed * dt;
+    if (state[SDL_SCANCODE_S]) polar   += orbitSpeed * dt;
 
-    // --- WASD: Rotate the Camera Angle ---
-    if (state[SDL_SCANCODE_A]) azimuth -= orbitSpeed;
-    if (state[SDL_SCANCODE_D]) azimuth += orbitSpeed;
-    if (state[SDL_SCANCODE_W]) polar -= orbitSpeed;
-    if (state[SDL_SCANCODE_S]) polar += orbitSpeed;
+    // Wrap azimuth
+    if (azimuth > 2.0f * M_PI) azimuth -= 2.0f * M_PI;
+    if (azimuth < 0.0f)        azimuth += 2.0f * M_PI;
 
-    // Clamp polar angle to prevent the camera from flipping over the top (Gimbal Lock-ish)
-    if (polar < 0.1f) polar = 0.1f;
-    if (polar > M_PI - 0.1f) polar = M_PI - 0.1f;
+    // Clamp polar
+    const float epsilon = 0.2f;
+    if (polar < epsilon) polar = epsilon;
+    if (polar > M_PI - epsilon) polar = M_PI - epsilon;
 
-    // --- SPACE / TAB: Zoom Distance ---
-    if (state[SDL_SCANCODE_SPACE]) distance -= zoomSpeed;
-    if (state[SDL_SCANCODE_TAB])   distance += zoomSpeed;
-    if (distance < 1.0f) distance = 1.0f; // Prevent going inside the target
+    // --- CAMERA-RELATIVE MOVEMENT ---
+    Vect3 forward = { cosf(azimuth), 0.0f, sinf(azimuth) };
+    Vect3 right   = { -sinf(azimuth), 0.0f, cosf(azimuth) };
 
-    // --- Calculate New Eye Position ---
+    if (state[SDL_SCANCODE_UP]) {
+        target.x += forward.x * moveSpeed * dt;
+        target.z += forward.z * moveSpeed * dt;
+    }
+    if (state[SDL_SCANCODE_DOWN]) {
+        target.x -= forward.x * moveSpeed * dt;
+        target.z -= forward.z * moveSpeed * dt;
+    }
+    if (state[SDL_SCANCODE_LEFT]) {
+        target.x -= right.x * moveSpeed * dt;
+        target.z -= right.z * moveSpeed * dt;
+    }
+    if (state[SDL_SCANCODE_RIGHT]) {
+        target.x += right.x * moveSpeed * dt;
+        target.z += right.z * moveSpeed * dt;
+    }
+
+    // --- ZOOM ---
+    if (state[SDL_SCANCODE_SPACE]) distance *= (1.0f - zoomSpeed * dt);
+    if (state[SDL_SCANCODE_TAB])   distance *= (1.0f + zoomSpeed * dt);
+
+    if (distance < 1.0f) distance = 1.0f;
+
+    // --- CALCULATE CAMERA POSITION ---
     Vect3 eye;
     eye.x = target.x + distance * sinf(polar) * cosf(azimuth);
     eye.y = target.y + distance * cosf(polar);

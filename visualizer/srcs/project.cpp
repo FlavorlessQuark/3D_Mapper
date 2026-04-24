@@ -21,28 +21,42 @@ double Dot(Vect3 a, Vect3 b) {
     return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
-void Update_Camera(Vect3 eye, Vect3 target, Vect3 up) {
-    // 1. Calculate the New Forward Vector
-    Vect3 f = Normalize((Vect3){target.x - eye.x, target.y - eye.y, target.z - eye.z});
-    
-    // 2. Calculate the Right Vector
-    Vect3 r = Normalize(Cross(up, f));
-    
-    // 3. Calculate the actual Up Vector
-    Vect3 u = Cross(f, r);
+void Update_Camera(Vect3 eye, Vect3 target, Vect3 up)
+{
+    // Forward (camera direction)
+    Vect3 f = Normalize((Vect3){
+        target.x - eye.x,
+        target.y - eye.y,
+        target.z - eye.z
+    });
 
-    // Zero out the projection Matrix
+    // Right (correct order!)
+    Vect3 r = Normalize(Cross(f, up));
+
+    // True up
+    Vect3 u = Cross(r, f);
+
     bzero(projection.mat, projection.m * projection.n * sizeof(double));
 
-    // Fill projection Matrix (Row-Major Camera orientation + Translation)
-    projection.mat[0][0] = r.x;  projection.mat[0][1] = u.x;  projection.mat[0][2] = f.x;  projection.mat[0][3] = 0.0;
-    projection.mat[1][0] = r.y;  projection.mat[1][1] = u.y;  projection.mat[1][2] = f.y;  projection.mat[1][3] = 0.0;
-    projection.mat[2][0] = r.z;  projection.mat[2][1] = u.z;  projection.mat[2][2] = f.z;  projection.mat[2][3] = 0.0;
-    
-    // Translation component: -Dot(axis, eye)
-    projection.mat[3][0] = -Dot(r, eye);
-    projection.mat[3][1] = -Dot(u, eye);
-    projection.mat[3][2] = -Dot(f, eye);
+    // Row-major view matrix
+    projection.mat[0][0] = r.x;
+    projection.mat[0][1] = r.y;
+    projection.mat[0][2] = r.z;
+    projection.mat[0][3] = -Dot(r, eye);
+
+    projection.mat[1][0] = u.x;
+    projection.mat[1][1] = u.y;
+    projection.mat[1][2] = u.z;
+    projection.mat[1][3] = -Dot(u, eye);
+
+    projection.mat[2][0] = -f.x;
+    projection.mat[2][1] = -f.y;
+    projection.mat[2][2] = -f.z;
+    projection.mat[2][3] = Dot(f, eye);
+
+    projection.mat[3][0] = 0.0;
+    projection.mat[3][1] = 0.0;
+    projection.mat[3][2] = 0.0;
     projection.mat[3][3] = 1.0;
 }
 

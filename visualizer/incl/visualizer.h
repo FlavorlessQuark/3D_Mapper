@@ -6,7 +6,7 @@ void            SDLX_InitDefault();
 SDLX_Display	*SDLX_DisplayGet(void);
 void Init_Matrix();
 void project(Vect3 *in, Vect2 *out, int count);
-void InputLoop(void);
+void InputLoop(float dt);
 
 // Utils
 double  VectAbs(Vect3 a);
