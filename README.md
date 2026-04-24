@@ -1,5 +1,7 @@
 # 3D_Mapper
 
+Visualizer is located in branch visualizer
+
 Usage :
 
 - Connect robot to 9V power source
